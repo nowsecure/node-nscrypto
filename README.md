@@ -86,7 +86,7 @@ The returned `Buffer` contains the decrypted plaintext.
 
 ## CHANGELOG
 
-* 0.0.0 : Initial release
+* 1.0.0 : Initial release
 
 ## TODO
 
