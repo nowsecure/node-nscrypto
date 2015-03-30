@@ -6,6 +6,7 @@
   "scripts": {
     "test": "mocha --no-colors --recursive --reporter spec test/"
   },
+  "repository" : "nowsecure/node-nscrypto",
   "gypfile": true,
   "author": "Robert Klep <rklep@nowsecure.com>",
   "license": "MIT",
