@@ -2,6 +2,8 @@
 
 Wrapper around [nscrypto-cpp](https://github.com/nowsecure/nscrypto-cpp).
 
+[![Build Status](https://travis-ci.org/nowsecure/node-nscrypto.svg?branch=travis-ci-support)](https://travis-ci.org/nowsecure/node-nscrypto)
+
 ## PREREQUISITES
 
 * A C++11 compiler.
