@@ -6,6 +6,7 @@ Wrapper around [nscrypto-cpp](https://github.com/nowsecure/nscrypto-cpp).
 
 ## PREREQUISITES
 
+* A relatively recent Node or io.js version (tested with Node@0.1[02] and io.js@latest).
 * A C++11 compiler.
 * A recent OpenSSL library. If you're on Mac OS X: Apple has deprecated OpenSSL in favor of its own TLS and crypto libraries, and you should look at [Homebrew](http://brew.sh/) to install a recent OpenSSL version.
 
@@ -26,7 +27,7 @@ $ npm install nowsecure/node-nscrypto
 Or clone the repository and build it directly:
 
 ```
-$ git clone https://github.com/viaforensics/node-nscrypto.git
+$ git clone https://github.com/nowsecure/node-nscrypto.git
 $ cd node-nscrypto
 $ npm install
 ```
