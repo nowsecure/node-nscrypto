@@ -46,7 +46,7 @@ var nscrypto = require('nscrypto');
 nscrypto.generateKeyPair() : Object
 ```
 
-The returned object contains two properties of type `Buffer`:
+The returned object has two properties of type `Buffer`:
 
 * `public`: the generated public key
 * `private`: the generated private key
@@ -63,7 +63,7 @@ nscrypto.{client,server}.encrypt(
 ) : Object
 ```
 
-Returned object contains two properties:
+Returned object has two properties:
 
 * `enc`: the encrypted data
 * `eph`: the ephemeral key
@@ -80,10 +80,9 @@ nscrypto.{client,server}.decrypt(
 ) : Buffer
 ```
 
-`message` is an object as the one returned by the encryption functions, contains `enc` and `eph` properties.
+`message` is an object as the one returned by the encryption functions, having `enc` and `eph` properties.
 
-The returned `Buffer` contains the decrypted plaintext.
-
+The returned `Buffer` is the decrypted plaintext.
 
 ## CHANGELOG
 
@@ -92,7 +91,6 @@ The returned `Buffer` contains the decrypted plaintext.
 ## TODO
 
 * Automate finding the correct OpenSSL library on Mac OS X (instead of hardcoding the path).
-* Travis CI support.
 
 ## SEE ALSO
 
