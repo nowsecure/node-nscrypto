@@ -81,9 +81,15 @@ nscrypto.{client,server}.decrypt(
 
 The returned `Buffer` contains the decrypted plaintext.
 
+
 ## CHANGELOG
 
-* 1.0.0 : Initial release
+* 0.0.0 : Initial release
+
+## TODO
+
+* Automate finding the correct OpenSSL library on Mac OS X (instead of hardcoding the path).
+* Travis CI support.
 
 ## SEE ALSO
 
