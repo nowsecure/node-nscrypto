@@ -4,6 +4,7 @@
 using namespace v8;
 using namespace node;
 
+// Helper functions.
 static inline bool _is_buffer(Handle<Value> v) {
     return node::Buffer::HasInstance(v);
 }
@@ -12,11 +13,12 @@ static inline Local<Object> _to_buffer(std::string s) {
     return NanNewBufferHandle((char *) s.data(), s.size());
 }
 
+// Generate a private/public key pair.
 NAN_METHOD(GenerateKeyPair) {
     NanScope();
 
     // Generate private/public key pair and return as JS object.
-    auto keypair      = ec_keypair();
+    keypair_t keypair = ec_keypair();
     Local<Object> obj = NanNew<Object>();
 
     obj->Set(NanNew("private"), _to_buffer(std::get<0>(keypair)));
@@ -25,6 +27,7 @@ NAN_METHOD(GenerateKeyPair) {
     NanReturnValue(obj);
 }
 
+// Encrypt data (both client and server encryption).
 Local<Value> Encrypt(
     _NAN_METHOD_ARGS,
     ecdh_encrypted_t (*EncryptionMethod)(const std::string&, const std::string&,
@@ -78,12 +81,14 @@ Local<Value> Encrypt(
 
     // Return object.
     Local<Object> obj = NanNew<Object>();
+
     obj->Set(NanNew("enc"), _to_buffer(enc + tag));
     obj->Set(NanNew("eph"), _to_buffer(eph));
 
     return obj;
 }
 
+// Client encryption.
 NAN_METHOD(ClientEncrypt) {
     NanScope();
     Local<Value> ret = Encrypt(args, ecdh_client_encrypt);
@@ -96,6 +101,7 @@ NAN_METHOD(ClientEncrypt) {
     }
 }
 
+// Server encryption.
 NAN_METHOD(ServerEncrypt) {
     NanScope();
     Local<Value> ret = Encrypt(args, ecdh_server_encrypt);
@@ -108,6 +114,7 @@ NAN_METHOD(ServerEncrypt) {
     }
 }
 
+// Decrypt data (both client and server decryption).
 Local<Value> Decrypt(
     _NAN_METHOD_ARGS,
     std::string (*DecryptionMethod)(const std::string&, const std::string&,
@@ -145,9 +152,9 @@ Local<Value> Decrypt(
     std::string r_id(*NanUtf8String(args[3]));
 
     // Process message object
-    Local<Object> messageObject = args[4]->ToObject();
-    Local<Value> encBuffer      = messageObject->Get(NanNew("enc"));
-    Local<Value> ephBuffer      = messageObject->Get(NanNew("eph"));
+    Local<Object> messageObj = args[4]->ToObject();
+    Local<Value> encBuffer   = messageObj->Get(NanNew("enc"));
+    Local<Value> ephBuffer   = messageObj->Get(NanNew("eph"));
     if (! _is_buffer(encBuffer) || ! _is_buffer(ephBuffer)) {
         return NanError("Message argument must be have 'enc' and 'eph' properties of type Buffer.");
     }
@@ -157,7 +164,8 @@ Local<Value> Decrypt(
 
     ecdh_encrypted_t message;
     if (enc.size() > 16 && ! eph.empty()) {
-        message = ecdh_encrypted_t(enc.substr(0, enc.size() - 16), enc.substr(enc.size() - 16), eph);
+        int offset = enc.size() - 16;
+        message = ecdh_encrypted_t(enc.substr(0, offset), enc.substr(offset), eph);
     } else {
         message = ecdh_encrypted_t(std::string(), std::string(), std::string());
     }
@@ -171,6 +179,7 @@ Local<Value> Decrypt(
     return _to_buffer(decrypted);
 }
 
+// Client decryption.
 NAN_METHOD(ClientDecrypt) {
     NanScope();
     Local<Value> ret = Decrypt(args, ecdh_client_decrypt);
@@ -183,6 +192,7 @@ NAN_METHOD(ClientDecrypt) {
     }
 }
 
+// Server decryption.
 NAN_METHOD(ServerDecrypt) {
     NanScope();
     Local<Value> ret = Decrypt(args, ecdh_server_decrypt);
@@ -195,13 +205,15 @@ NAN_METHOD(ServerDecrypt) {
     }
 }
 
+// Addon initialization.
 void InitAll(Handle<Object> exports) {
     exports->Set(NanNew("generateKeyPair"), NanNew<FunctionTemplate>(GenerateKeyPair)->GetFunction());
 
     Local<Object> client = NanNew<Object>();
-    Local<Object> server = NanNew<Object>();
     client->Set(NanNew("encrypt"), NanNew<FunctionTemplate>(ClientEncrypt)->GetFunction());
     client->Set(NanNew("decrypt"), NanNew<FunctionTemplate>(ClientDecrypt)->GetFunction());
+
+    Local<Object> server = NanNew<Object>();
     server->Set(NanNew("encrypt"), NanNew<FunctionTemplate>(ServerEncrypt)->GetFunction());
     server->Set(NanNew("decrypt"), NanNew<FunctionTemplate>(ServerDecrypt)->GetFunction());
 
