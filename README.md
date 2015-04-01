@@ -92,11 +92,8 @@ The returned `Buffer` is the decrypted plaintext.
 
 ## CHANGELOG
 
+* 1.1.0 : Make OpenSSL library/include paths overridable on Mac OS X
 * 1.0.0 : Initial release
-
-## TODO
-
-* Automate finding the correct OpenSSL library on Mac OS X (instead of hardcoding the path).
 
 ## SEE ALSO
 
