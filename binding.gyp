@@ -11,8 +11,12 @@
     },
     "conditions"   : [
       ["OS == 'mac'", {
-        "include_dirs" : [ "/usr/local/opt/openssl/include" ],
-        "library_dirs" : [ "/usr/local/opt/openssl/lib" ],
+        "variables" : {
+            "openssl_include_dir%" : "<!(if [ -z $OPENSSL_INCLUDE_DIR ]; then echo '/usr/local/opt/openssl/include'; else echo $OPENSSL_INCLUDE_DIR; fi)",
+            "openssl_lib_dir%" : "<!(if [ -z $OPENSSL_LIB_DIR ]; then echo '/usr/local/opt/openssl/lib'; else echo $OPENSSL_LIB_DIR; fi)",
+        },
+        "include_dirs" : [ "<(openssl_include_dir)" ],
+        "library_dirs" : [ "<(openssl_lib_dir)" ],
         "xcode_settings" : {
           "MACOSX_DEPLOYMENT_TARGET" : "10.7",
           "OTHER_CFLAGS"             : [

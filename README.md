@@ -32,6 +32,12 @@ $ cd node-nscrypto
 $ npm install
 ```
 
+For installations on Mac OS X, the default assumption is that you use a Homebrew-installed OpenSSL library that is installed in `/usr/local/opt/openssl/`. If you have OpenSSL installed somewhere else, you can override the library and include paths:
+
+```
+$ env OPENSSL_INCLUDE_DIR=/path/to/include/dir OPENSSL_LIB_DIR=/path/to/lib/dir npm install nscrypto
+```
+
 ## API
 
 All API calls require the `nscrypto` module to be loaded:
